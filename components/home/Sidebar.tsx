@@ -1,7 +1,9 @@
+import Link from 'next/link';
 import { Calendar, Users, MessageCircle, ArrowRight } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import type { Meetup } from '@/lib/types';
+import { meetups as allMeetups } from '@/lib/data/meetups';
 
 interface SidebarProps {
   meetups: Meetup[];
@@ -46,17 +48,21 @@ export function Sidebar({ meetups }: SidebarProps) {
                   <Users className="h-3 w-3" />
                   RSVP: {meetup.rsvpCount}명
                 </span>
-                <Button size="sm" variant="ghost" className="h-7 text-xs">
-                  참여하기 →
-                </Button>
+                <Link href={`/meetups/${meetup.id}`}>
+                  <Button size="sm" variant="ghost" className="h-7 text-xs">
+                    참여하기 →
+                  </Button>
+                </Link>
               </div>
             </div>
           ))}
         </CardContent>
         <CardFooter>
-          <Button variant="link" className="w-full p-0 h-auto text-primary">
-            → 모든 밋업 보기 (32개)
-          </Button>
+          <Link href="/meetups" className="w-full">
+            <Button variant="link" className="w-full p-0 h-auto text-primary">
+              → 모든 밋업 보기 ({allMeetups.length}개)
+            </Button>
+          </Link>
         </CardFooter>
       </Card>
 
@@ -116,10 +122,12 @@ export function Sidebar({ meetups }: SidebarProps) {
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full">
-            채팅 참여하기
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          <Link href="/community/chat" className="w-full">
+            <Button className="w-full">
+              채팅 참여하기
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
         </CardFooter>
       </Card>
 

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Star, Heart, MapPin, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,13 +12,6 @@ interface CityCardProps {
 export function CityCard({ city }: CityCardProps) {
   const formatCurrency = (amount: number) => {
     return `₩${(amount / 10000).toFixed(1)}M`;
-  };
-
-  const formatNumber = (num: number) => {
-    if (num >= 1000) {
-      return `${(num / 1000).toFixed(1)}K`;
-    }
-    return num.toString();
   };
 
   const renderStars = (score: number) => {
@@ -100,10 +94,12 @@ export function CityCard({ city }: CityCardProps) {
       </CardContent>
 
       <CardFooter className="pt-0">
-        <Button className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-          상세 보기
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+        <Link href={`/cities/${city.slug}`} className="w-full">
+          <Button className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+            상세 보기
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );

@@ -1,3 +1,6 @@
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import type { Stats } from '@/lib/types';
 
 interface StatsSectionProps {
@@ -48,6 +51,15 @@ export function StatsSection({ stats }: StatsSectionProps) {
               <div className="text-sm text-muted-foreground">{item.label}</div>
             </div>
           ))}
+        </div>
+
+        <div className="text-center mt-8">
+          <Link href="/stats">
+            <Button variant="outline">
+              더 자세한 통계 보기
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

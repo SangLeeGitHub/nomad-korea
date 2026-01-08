@@ -2,19 +2,28 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Search, User } from 'lucide-react';
+import { Menu, X, Search, User, LogOut, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { UserDropdown } from './UserDropdown';
+import { logout } from '@/app/login/actions';
 
-export function Header() {
+interface HeaderProps {
+  user?: {
+    email?: string;
+  } | null;
+}
+
+export function Header({ user }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navItems = [
+  const navItems: { name: string; href: string; icon: string; active: boolean; badge?: string }[] = [
     { name: '홈', href: '/', icon: '🏠', active: true },
     { name: '도시탐색', href: '/cities', icon: '🗺️', active: true },
-    { name: '밋업', href: '/meetups', icon: '👥', active: false, badge: '준비 중' },
-    { name: '커뮤니티', href: '/community', icon: '💬', active: false, badge: '준비 중' },
-    { name: '통계', href: '/stats', icon: '📊', active: false, badge: '준비 중' },
-    { name: '가이드', href: '/guides', icon: '❓', active: false, badge: '준비 중' },
+    { name: '밋업', href: '/meetups', icon: '👥', active: true },
+    { name: '커뮤니티', href: '/community', icon: '💬', active: true },
+    { name: '통계', href: '/stats', icon: '📊', active: true },
+    { name: '가이드', href: '/guides', icon: '❓', active: true },
   ];
 
   return (
@@ -56,21 +65,34 @@ export function Header() {
 
           {/* Right Actions */}
           <div className="hidden md:flex items-center space-x-4">
+            <ThemeToggle />
             <Button variant="ghost" size="icon" aria-label="Search">
               <Search className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" aria-label="Login">
-              <User className="h-5 w-5" />
-            </Button>
+            {user ? (
+              <UserDropdown email={user.email || ''} />
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost" size="sm">
+                    <User className="h-4 w-4 mr-2" />
+                    로그인
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button size="sm">
+                    회원가입
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
           <div className="flex md:hidden items-center space-x-2">
+            <ThemeToggle />
             <Button variant="ghost" size="icon" aria-label="Search">
               <Search className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon" aria-label="Login">
-              <User className="h-5 w-5" />
             </Button>
             <Button
               variant="ghost"
@@ -112,6 +134,47 @@ export function Header() {
                 )}
               </Link>
             ))}
+            <div className="pt-4 border-t space-y-2">
+              {user ? (
+                <>
+                  <div className="px-4 py-2 text-sm text-muted-foreground">
+                    {user.email}
+                  </div>
+                  <Link href="/profile" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      <User className="h-4 w-4 mr-2" />
+                      내 프로필
+                    </Button>
+                  </Link>
+                  <Link href="/profile/edit" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      <Settings className="h-4 w-4 mr-2" />
+                      설정
+                    </Button>
+                  </Link>
+                  <form action={logout}>
+                    <Button variant="ghost" className="w-full justify-start text-destructive" type="submit">
+                      <LogOut className="h-4 w-4 mr-2" />
+                      로그아웃
+                    </Button>
+                  </form>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      <User className="h-4 w-4 mr-2" />
+                      로그인
+                    </Button>
+                  </Link>
+                  <Link href="/register" onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="w-full">
+                      회원가입
+                    </Button>
+                  </Link>
+                </>
+              )}
+            </div>
           </nav>
         </div>
       )}

@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, SlidersHorizontal, Grid3x3, Map, List, RotateCcw } from 'lucide-react';
+import { Search, Grid3x3, List, RotateCcw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,9 +10,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
+import { Slider } from '@/components/ui/slider';
 
-export function FilterBar() {
+interface FilterBarProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  costRange: [number, number];
+  onCostRangeChange: (range: [number, number]) => void;
+  sortBy: string;
+  onSortChange: (sort: string) => void;
+  viewType: 'grid' | 'list';
+  onViewTypeChange: (type: 'grid' | 'list') => void;
+  onReset: () => void;
+  resultCount: number;
+}
+
+const MIN_COST = 50;  // 50만원
+const MAX_COST = 300; // 300만원
+
+export function FilterBar({
+  searchQuery,
+  onSearchChange,
+  costRange,
+  onCostRangeChange,
+  sortBy,
+  onSortChange,
+  viewType,
+  onViewTypeChange,
+  onReset,
+  resultCount,
+}: FilterBarProps) {
+  const formatCost = (value: number) => {
+    if (value >= 100) {
+      return `${(value / 100).toFixed(1)}M`;
+    }
+    return `${value}만`;
+  };
+
   return (
     <div className="sticky top-16 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 py-4">
@@ -26,25 +60,34 @@ export function FilterBar() {
                 type="text"
                 placeholder="도시명, 지역, 특징 검색..."
                 className="pl-10"
+                value={searchQuery}
+                onChange={(e) => onSearchChange(e.target.value)}
               />
             </div>
 
-            {/* Filter Tags */}
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" className="h-8">
-                <SlidersHorizontal className="h-3 w-3 mr-1" />
-                필터
-              </Button>
-              <Badge variant="secondary" className="cursor-pointer hover:bg-destructive/10">
-                생활비: ₩500K - ₩3M
-              </Badge>
-              <Badge variant="secondary" className="cursor-pointer hover:bg-destructive/10">
-                카페 100개 이상
-              </Badge>
-              <Badge variant="secondary" className="cursor-pointer hover:bg-destructive/10">
-                인터넷 100Mbps+
-              </Badge>
-              <Button variant="ghost" size="sm" className="h-6 text-xs">
+            {/* Cost Range Slider */}
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground whitespace-nowrap">
+                생활비:
+              </span>
+              <div className="flex-1 px-2">
+                <Slider
+                  value={costRange}
+                  onValueChange={(value) => onCostRangeChange(value as [number, number])}
+                  min={MIN_COST}
+                  max={MAX_COST}
+                  step={10}
+                />
+              </div>
+              <span className="text-sm font-medium whitespace-nowrap min-w-[100px] text-right">
+                ₩{formatCost(costRange[0])} - ₩{formatCost(costRange[1])}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 text-xs"
+                onClick={onReset}
+              >
                 <RotateCcw className="h-3 w-3 mr-1" />
                 초기화
               </Button>
@@ -54,7 +97,7 @@ export function FilterBar() {
           {/* Right: Sort & View */}
           <div className="flex items-center gap-3">
             {/* Sort Dropdown */}
-            <Select defaultValue="overall">
+            <Select value={sortBy} onValueChange={onSortChange}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="정렬" />
               </SelectTrigger>
@@ -70,17 +113,20 @@ export function FilterBar() {
 
             {/* View Toggle */}
             <div className="flex items-center border rounded-md">
-              <Button variant="ghost" size="icon" className="h-9 w-9 rounded-r-none">
+              <Button
+                variant={viewType === 'grid' ? 'default' : 'ghost'}
+                size="icon"
+                className="h-9 w-9 rounded-r-none"
+                onClick={() => onViewTypeChange('grid')}
+              >
                 <Grid3x3 className="h-4 w-4" />
               </Button>
               <Button
-                variant="ghost"
+                variant={viewType === 'list' ? 'default' : 'ghost'}
                 size="icon"
-                className="h-9 w-9 rounded-none border-x"
+                className="h-9 w-9 rounded-l-none"
+                onClick={() => onViewTypeChange('list')}
               >
-                <Map className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-9 w-9 rounded-l-none">
                 <List className="h-4 w-4" />
               </Button>
             </div>
@@ -89,7 +135,7 @@ export function FilterBar() {
 
         {/* Results Count */}
         <div className="mt-3 text-sm text-muted-foreground">
-          <span className="font-medium text-foreground">25개</span> 도시가 검색되었습니다
+          <span className="font-medium text-foreground">{resultCount}개</span> 도시가 검색되었습니다
         </div>
       </div>
     </div>
