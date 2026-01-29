@@ -30,6 +30,7 @@ export interface City {
   internetSpeed: number; // in Mbps
   transitScore: number; // 1-5
   likeCount: number;
+  dislikeCount: number;
 
   // Weather & Environment
   currentTemp: number;

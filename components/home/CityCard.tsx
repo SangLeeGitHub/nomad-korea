@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Star, Heart, MapPin, ArrowRight } from 'lucide-react';
+import { Star, ThumbsUp, ThumbsDown, MapPin, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -45,9 +45,18 @@ export function CityCard({ city }: CityCardProps) {
               {city.region}
             </p>
           </div>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Heart className="h-4 w-4" />
-          </Button>
+        </div>
+
+        {/* Like / Dislike */}
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <ThumbsUp className="h-4 w-4" />
+            <span>{city.likeCount.toLocaleString()}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span>{city.dislikeCount.toLocaleString()}</span>
+            <ThumbsDown className="h-4 w-4" />
+          </div>
         </div>
 
         {/* Key Metrics Grid */}
