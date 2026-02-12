@@ -5,7 +5,7 @@ import { Clock } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { Guide } from '@/lib/types';
-import { categoryLabels, categoryColors } from '@/lib/data/guides';
+import { guideCategoryLabels, guideCategoryColors } from '@/lib/constants';
 
 interface GuideCardProps {
   guide: Guide;
@@ -17,8 +17,8 @@ export function GuideCard({ guide }: GuideCardProps) {
       <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-2">
-            <Badge className={categoryColors[guide.category]}>
-              {categoryLabels[guide.category]}
+            <Badge className={guideCategoryColors[guide.category]}>
+              {guideCategoryLabels[guide.category]}
             </Badge>
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <Clock className="h-3 w-3" />

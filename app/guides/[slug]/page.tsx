@@ -4,7 +4,8 @@ import { ChevronRight, ArrowLeft, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { getGuideBySlug, getRelatedGuides, categoryLabels, categoryColors } from '@/lib/data/guides';
+import { getGuideBySlug, getRelatedGuides } from '@/lib/dal/guides';
+import { guideCategoryLabels, guideCategoryColors } from '@/lib/constants';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -12,7 +13,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const guide = getGuideBySlug(slug);
+  const guide = await getGuideBySlug(slug);
 
   if (!guide) {
     return { title: '가이드를 찾을 수 없습니다 | 노마드코리아' };
@@ -26,13 +27,14 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function GuidePage({ params }: PageProps) {
   const { slug } = await params;
-  const guide = getGuideBySlug(slug);
+  const [guide, relatedGuides] = await Promise.all([
+    getGuideBySlug(slug),
+    getRelatedGuides(slug, 2),
+  ]);
 
   if (!guide) {
     notFound();
   }
-
-  const relatedGuides = getRelatedGuides(slug, 2);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -60,8 +62,8 @@ export default async function GuidePage({ params }: PageProps) {
       {/* Guide Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
-          <Badge className={categoryColors[guide.category]}>
-            {categoryLabels[guide.category]}
+          <Badge className={guideCategoryColors[guide.category]}>
+            {guideCategoryLabels[guide.category]}
           </Badge>
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <Clock className="h-4 w-4" />
@@ -112,8 +114,8 @@ export default async function GuidePage({ params }: PageProps) {
               <Link key={relatedGuide.id} href={`/guides/${relatedGuide.slug}`}>
                 <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
                   <CardHeader className="pb-2">
-                    <Badge className={`${categoryColors[relatedGuide.category]} w-fit`}>
-                      {categoryLabels[relatedGuide.category]}
+                    <Badge className={`${guideCategoryColors[relatedGuide.category]} w-fit`}>
+                      {guideCategoryLabels[relatedGuide.category]}
                     </Badge>
                     <CardTitle className="text-base">{relatedGuide.title}</CardTitle>
                   </CardHeader>

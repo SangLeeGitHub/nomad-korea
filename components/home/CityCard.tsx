@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Star, ThumbsUp, ThumbsDown, MapPin, ArrowRight } from 'lucide-react';
+import { Star, MapPin, ArrowRight } from 'lucide-react';
+import { CityLikeButtons } from './CityLikeButtons';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -48,16 +49,11 @@ export function CityCard({ city }: CityCardProps) {
         </div>
 
         {/* Like / Dislike */}
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <ThumbsUp className="h-4 w-4" />
-            <span>{city.likeCount.toLocaleString()}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span>{city.dislikeCount.toLocaleString()}</span>
-            <ThumbsDown className="h-4 w-4" />
-          </div>
-        </div>
+        <CityLikeButtons
+          cityId={city.id}
+          initialLikeCount={city.likeCount}
+          initialDislikeCount={city.dislikeCount}
+        />
 
         {/* Key Metrics Grid */}
         <div className="grid grid-cols-2 gap-3 text-sm">

@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { getPostById, getCommentsByPostId, categoryLabels, categoryColors } from '@/lib/data/forum';
+import { getPostById, getCommentsByPostId } from '@/lib/dal/forum';
+import { forumCategoryLabels, forumCategoryColors } from '@/lib/constants';
 
 interface ForumPostDetailPageProps {
   params: Promise<{ id: string }>;
@@ -13,13 +14,14 @@ interface ForumPostDetailPageProps {
 
 export default async function ForumPostDetailPage({ params }: ForumPostDetailPageProps) {
   const { id } = await params;
-  const post = getPostById(id);
+  const [post, comments] = await Promise.all([
+    getPostById(id),
+    getCommentsByPostId(id),
+  ]);
 
   if (!post) {
     notFound();
   }
-
-  const comments = getCommentsByPostId(id);
 
   const formatDate = (date: Date) => {
     const year = date.getFullYear();
@@ -74,8 +76,8 @@ export default async function ForumPostDetailPage({ params }: ForumPostDetailPag
         <CardHeader>
           {/* Category Badge */}
           <div className="mb-2">
-            <Badge className={`${categoryColors[post.category]}`}>
-              {categoryLabels[post.category]}
+            <Badge className={`${forumCategoryColors[post.category]}`}>
+              {forumCategoryLabels[post.category]}
             </Badge>
           </div>
 

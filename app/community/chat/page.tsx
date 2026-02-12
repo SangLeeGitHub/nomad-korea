@@ -2,8 +2,20 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChatContent } from '@/components/community/ChatContent';
+import { getChannels, getMessagesByChannelId } from '@/lib/dal/chat';
 
-export default function ChatPage() {
+export default async function ChatPage() {
+  const channels = await getChannels();
+
+  // Pre-fetch messages for all channels
+  const messageEntries = await Promise.all(
+    channels.map(async (ch) => {
+      const messages = await getMessagesByChannelId(ch.id);
+      return [ch.id, messages] as const;
+    })
+  );
+  const messagesByChannel = Object.fromEntries(messageEntries);
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumb */}
@@ -36,7 +48,7 @@ export default function ChatPage() {
       </div>
 
       {/* Chat Content */}
-      <ChatContent />
+      <ChatContent channels={channels} messagesByChannel={messagesByChannel} />
     </div>
   );
 }

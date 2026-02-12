@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { cities } from '@/lib/data/cities';
+import { getCities } from '@/lib/dal/cities';
 import { CityCard } from '@/components/home/CityCard';
 import { Button } from '@/components/ui/button';
 
-export default function CitiesPage() {
+export default async function CitiesPage() {
+  const cities = await getCities();
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumb */}

@@ -3,7 +3,7 @@ import { Eye, Heart, MessageSquare, Pin } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { ForumPost } from '@/lib/types';
-import { categoryLabels, categoryColors } from '@/lib/data/forum';
+import { forumCategoryLabels, forumCategoryColors } from '@/lib/constants';
 
 interface ForumPostCardProps {
   post: ForumPost;
@@ -42,8 +42,8 @@ export function ForumPostCard({ post }: ForumPostCardProps) {
               {post.isPinned && (
                 <Pin className="h-4 w-4 text-primary flex-shrink-0" />
               )}
-              <Badge className={`${categoryColors[post.category]} text-xs`}>
-                {categoryLabels[post.category]}
+              <Badge className={`${forumCategoryColors[post.category]} text-xs`}>
+                {forumCategoryLabels[post.category]}
               </Badge>
             </div>
 

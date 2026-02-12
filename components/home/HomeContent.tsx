@@ -4,16 +4,19 @@ import { useState, useMemo } from 'react';
 import { FilterBar } from './FilterBar';
 import { CityGrid } from './CityGrid';
 import { Sidebar } from './Sidebar';
-import { cities } from '@/lib/data/cities';
-import { meetups } from '@/lib/data/meetups';
-import type { City } from '@/lib/types';
+import type { City, Meetup } from '@/lib/types';
 
 const DEFAULT_COST_RANGE: [number, number] = [50, 300]; // 만원 단위
 
 type SortOption = 'overall' | 'cost-asc' | 'cost-desc' | 'cafe' | 'internet' | 'nomads';
 type ViewType = 'grid' | 'list';
 
-export function HomeContent() {
+interface HomeContentProps {
+  cities: City[];
+  meetups: Meetup[];
+}
+
+export function HomeContent({ cities, meetups }: HomeContentProps) {
   // 필터 상태
   const [searchQuery, setSearchQuery] = useState('');
   const [costRange, setCostRange] = useState<[number, number]>(DEFAULT_COST_RANGE);

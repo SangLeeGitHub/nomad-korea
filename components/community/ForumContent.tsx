@@ -3,8 +3,7 @@
 import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { ForumPostCard } from './ForumPostCard';
-import { getAllPosts } from '@/lib/data/forum';
-import type { ForumCategory } from '@/lib/types';
+import type { ForumPost, ForumCategory } from '@/lib/types';
 
 type CategoryFilter = ForumCategory | 'all';
 
@@ -21,9 +20,12 @@ const categoryTabs: CategoryTab[] = [
   { id: 'free', label: '자유게시판' },
 ];
 
-export function ForumContent() {
+interface ForumContentProps {
+  posts: ForumPost[];
+}
+
+export function ForumContent({ posts }: ForumContentProps) {
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('all');
-  const posts = getAllPosts();
 
   const filteredPosts = useMemo(() => {
     if (selectedCategory === 'all') {

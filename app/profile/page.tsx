@@ -5,15 +5,28 @@ import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { ProfileStats } from '@/components/profile/ProfileStats';
 import { VisitedCitiesList } from '@/components/profile/VisitedCitiesList';
 import { MyReviewsList } from '@/components/profile/MyReviewsList';
-import { getUserProfile } from '@/lib/data/user-profile';
+import { createClient } from '@/utils/supabase/server';
+import { getUserProfile } from '@/lib/dal/profiles';
+import { redirect } from 'next/navigation';
 
 export const metadata = {
   title: '내 프로필 | 노마드코리아',
   description: '나의 노마드 활동 기록',
 };
 
-export default function ProfilePage() {
-  const profile = getUserProfile();
+export default async function ProfilePage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  const profile = await getUserProfile(user.id);
+
+  if (!profile) {
+    redirect('/login');
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">

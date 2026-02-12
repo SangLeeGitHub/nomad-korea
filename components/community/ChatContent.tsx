@@ -1,21 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ArrowLeft, Hash, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ChannelList } from './ChannelList';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
-import { getChannels, getMessagesByChannelId, getChannelById } from '@/lib/data/chat';
+import type { ChatChannel, ChatMessage } from '@/lib/types';
 
-export function ChatContent() {
-  const channels = getChannels();
+interface ChatContentProps {
+  channels: ChatChannel[];
+  messagesByChannel: Record<string, ChatMessage[]>;
+}
+
+export function ChatContent({ channels, messagesByChannel }: ChatContentProps) {
   const [selectedChannelId, setSelectedChannelId] = useState(channels[0]?.id || '');
   const [showChannelList, setShowChannelList] = useState(true);
 
-  const selectedChannel = getChannelById(selectedChannelId);
-  const messages = getMessagesByChannelId(selectedChannelId);
+  const selectedChannel = useMemo(
+    () => channels.find((c) => c.id === selectedChannelId) || null,
+    [channels, selectedChannelId]
+  );
+  const messages = messagesByChannel[selectedChannelId] || [];
 
   // Mobile: Toggle between channel list and messages
   const handleSelectChannel = (channelId: string) => {

@@ -47,9 +47,26 @@
       "Bash(cmd.exe /c \"gh --version\")",
       "Bash(cmd.exe /c \"gh issue create --title \"\"feat: Claude Code 커스텀 명령어 시스템 구현 완료\"\" --body \"\"## 개요\nClaude Code에서 사용할 수 있는 커스텀 명령어 시스템 구현 완료\n\n## 구현된 명령어\n- [x] /create-issue - GitHub 이슈 생성\n- [x] /resolve-issue - GitHub 이슈 분석 및 해결 계획 수립\n- [x] /feature-breakdown - 기능 분해 및 작업 계획\n- [x] /create-designs - 페르소나 기반 디자인 제안\n- [x] /create-worktree - Git worktree 생성 스크립트\n\n## 관련 파일\n- .claude/commands/create-issue.md\n- .claude/commands/resolve-issue.md\n- .claude/commands/feature-breakdown.md\n- .claude/commands/create-designs.md\n- .claude/commands/create-worktree.ps1\n- .claude/commands/create-worktree.sh\"\"\")",
       "WebFetch(domain:github.com)",
-      "Bash(git commit -m \"$\\(cat <<''EOF''\nchore: Update Claude Code local settings permissions\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nchore: Update Claude Code local settings permissions\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "mcp__supabase__list_tables",
+      "mcp__context7__query-docs",
+      "mcp__supabase__get_project_url",
+      "mcp__supabase__get_publishable_keys",
+      "mcp__supabase__execute_sql",
+      "mcp__supabase__apply_migration",
+      "mcp__supabase__generate_typescript_types",
+      "mcp__supabase__get_advisors",
+      "Bash(timeout:*)",
+      "Bash(curl:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(git status:*)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "supabase",
+    "context7"
+  ]
 }

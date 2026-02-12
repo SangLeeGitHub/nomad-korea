@@ -2,8 +2,11 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ForumContent } from '@/components/community/ForumContent';
+import { getAllPosts } from '@/lib/dal/forum';
 
-export default function ForumPage() {
+export default async function ForumPage() {
+  const posts = await getAllPosts();
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumb */}
@@ -36,7 +39,7 @@ export default function ForumPage() {
       </div>
 
       {/* Forum Content */}
-      <ForumContent />
+      <ForumContent posts={posts} />
     </div>
   );
 }

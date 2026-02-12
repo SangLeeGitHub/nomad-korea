@@ -1,13 +1,16 @@
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { GuidesContent } from '@/components/guides/GuidesContent';
+import { getAllGuides } from '@/lib/dal/guides';
 
 export const metadata = {
   title: '가이드 | 노마드코리아',
   description: '한국 디지털노마드 생활에 필요한 비자, 숙소, 작업공간, 생활 정보 가이드',
 };
 
-export default function GuidesPage() {
+export default async function GuidesPage() {
+  const guides = await getAllGuides();
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumb */}
@@ -28,7 +31,7 @@ export default function GuidesPage() {
       </div>
 
       {/* Content */}
-      <GuidesContent />
+      <GuidesContent guides={guides} />
     </div>
   );
 }

@@ -3,29 +3,32 @@
 import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { GuideCard } from './GuideCard';
-import { getAllGuides, categoryLabels } from '@/lib/data/guides';
-import type { GuideCategory } from '@/lib/types';
+import { guideCategoryLabels } from '@/lib/constants';
+import type { Guide, GuideCategory } from '@/lib/types';
 
 type CategoryFilter = 'all' | GuideCategory;
 
 const categories: { value: CategoryFilter; label: string }[] = [
   { value: 'all', label: '전체' },
-  { value: 'visa', label: categoryLabels.visa },
-  { value: 'accommodation', label: categoryLabels.accommodation },
-  { value: 'workspace', label: categoryLabels.workspace },
-  { value: 'lifestyle', label: categoryLabels.lifestyle },
+  { value: 'visa', label: guideCategoryLabels.visa },
+  { value: 'accommodation', label: guideCategoryLabels.accommodation },
+  { value: 'workspace', label: guideCategoryLabels.workspace },
+  { value: 'lifestyle', label: guideCategoryLabels.lifestyle },
 ];
 
-export function GuidesContent() {
+interface GuidesContentProps {
+  guides: Guide[];
+}
+
+export function GuidesContent({ guides: allGuides }: GuidesContentProps) {
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('all');
 
   const guides = useMemo(() => {
-    const allGuides = getAllGuides();
     if (selectedCategory === 'all') {
       return allGuides;
     }
     return allGuides.filter((guide) => guide.category === selectedCategory);
-  }, [selectedCategory]);
+  }, [allGuides, selectedCategory]);
 
   return (
     <div className="space-y-6">

@@ -3,7 +3,6 @@ import { Calendar, Users, MessageCircle, ArrowRight } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import type { Meetup } from '@/lib/types';
-import { meetups as allMeetups } from '@/lib/data/meetups';
 
 interface SidebarProps {
   meetups: Meetup[];
@@ -60,7 +59,7 @@ export function Sidebar({ meetups }: SidebarProps) {
         <CardFooter>
           <Link href="/meetups" className="w-full">
             <Button variant="link" className="w-full p-0 h-auto text-primary">
-              → 모든 밋업 보기 ({allMeetups.length}개)
+              → 모든 밋업 보기 ({meetups.length}개)
             </Button>
           </Link>
         </CardFooter>

@@ -1,6 +1,3 @@
-'use client';
-
-import { use } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, MapPin } from 'lucide-react';
@@ -9,24 +6,25 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { MeetupHeader } from '@/components/meetups/MeetupHeader';
 import { AttendeeList } from '@/components/meetups/AttendeeList';
 import { RSVPSection } from '@/components/meetups/RSVPSection';
-import { getMeetupDetailById, meetups } from '@/lib/data/meetups';
+import { getMeetupDetailById, getMeetupsByCity } from '@/lib/dal/meetups';
 import { MeetupCard } from '@/components/meetups/MeetupCard';
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-export default function MeetupDetailPage({ params }: PageProps) {
-  const { id } = use(params);
-  const meetup = getMeetupDetailById(id);
+export default async function MeetupDetailPage({ params }: PageProps) {
+  const { id } = await params;
+  const meetup = await getMeetupDetailById(id);
 
   if (!meetup) {
     notFound();
   }
 
   // 같은 도시의 다른 밋업 (최대 3개)
-  const relatedMeetups = meetups
-    .filter((m) => m.cityName === meetup.cityName && m.id !== meetup.id)
+  const cityMeetups = await getMeetupsByCity(meetup.cityName);
+  const relatedMeetups = cityMeetups
+    .filter((m) => m.id !== meetup.id)
     .slice(0, 3);
 
   return (

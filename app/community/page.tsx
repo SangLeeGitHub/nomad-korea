@@ -2,12 +2,14 @@ import Link from 'next/link';
 import { ArrowRight, MessageCircle, Users } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { getAllPosts } from '@/lib/data/forum';
-import { getChannels } from '@/lib/data/chat';
+import { getAllPosts } from '@/lib/dal/forum';
+import { getChannels } from '@/lib/dal/chat';
 
-export default function CommunityPage() {
-  const posts = getAllPosts();
-  const channels = getChannels();
+export default async function CommunityPage() {
+  const [posts, channels] = await Promise.all([
+    getAllPosts(),
+    getChannels(),
+  ]);
 
   return (
     <div className="container mx-auto px-4 py-8">

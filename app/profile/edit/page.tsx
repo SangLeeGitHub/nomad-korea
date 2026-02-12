@@ -1,15 +1,28 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
 import { ProfileEditForm } from '@/components/profile/ProfileEditForm';
-import { getUserProfile } from '@/lib/data/user-profile';
+import { getUserProfile } from '@/lib/dal/profiles';
+import { createClient } from '@/utils/supabase/server';
 
 export const metadata = {
   title: '프로필 수정 | 노마드코리아',
   description: '프로필 정보 수정',
 };
 
-export default function ProfileEditPage() {
-  const profile = getUserProfile();
+export default async function ProfileEditPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  const profile = await getUserProfile(user.id);
+
+  if (!profile) {
+    redirect('/login');
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">

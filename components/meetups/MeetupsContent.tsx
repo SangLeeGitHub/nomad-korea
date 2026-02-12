@@ -7,19 +7,21 @@ import { Button } from '@/components/ui/button';
 import { MeetupFilterBar } from './MeetupFilterBar';
 import { CalendarView } from './CalendarView';
 import { MeetupListView } from './MeetupListView';
-import { meetups, getUniqueCities } from '@/lib/data/meetups';
-import type { MeetupCategory } from '@/lib/types';
+import type { Meetup, MeetupCategory } from '@/lib/types';
 
-export function MeetupsContent() {
+interface MeetupsContentProps {
+  meetups: Meetup[];
+  cities: string[];
+}
+
+export function MeetupsContent({ meetups: allMeetups, cities }: MeetupsContentProps) {
   const [cityFilter, setCityFilter] = useState<string>('all');
   const [categoryFilter, setCategoryFilter] = useState<MeetupCategory | 'all'>('all');
   const [viewType, setViewType] = useState<'calendar' | 'list'>('list');
 
-  const cities = useMemo(() => getUniqueCities(), []);
-
   // 필터링된 밋업
   const filteredMeetups = useMemo(() => {
-    return meetups.filter((meetup) => {
+    return allMeetups.filter((meetup) => {
       // 도시 필터
       if (cityFilter !== 'all' && meetup.cityName !== cityFilter) {
         return false;
@@ -30,7 +32,7 @@ export function MeetupsContent() {
       }
       return true;
     });
-  }, [cityFilter, categoryFilter]);
+  }, [allMeetups, cityFilter, categoryFilter]);
 
   const handleReset = () => {
     setCityFilter('all');
